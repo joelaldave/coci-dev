@@ -1,4 +1,8 @@
-import { Task, TaskStatus } from './../../interfaces/task.interface';
+import {
+  Task,
+  TaskColumn,
+  TaskStatus,
+} from './../../interfaces/task.interface';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,6 +14,14 @@ import { TaskService } from '../../services/task.service';
 import { CommonModule } from '@angular/common';
 import { TaskModalComponent } from '../task-modal/task-modal.component';
 import { DeleteTaskModalComponent } from '../delete-task-modal/delete-task-modal.component';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDropList,
+  CdkDropListGroup,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-kanban-board',
@@ -18,6 +30,9 @@ import { DeleteTaskModalComponent } from '../delete-task-modal/delete-task-modal
     CommonModule,
     TaskModalComponent,
     DeleteTaskModalComponent,
+    CdkDrag,
+    CdkDropList,
+    CdkDropListGroup,
   ],
   templateUrl: './kanban-board.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,7 +83,7 @@ export class KanbanBoardComponent {
 
     this.isTaskModalOpen.set(true);
   }
-  
+
   // Metodo para abrir el modal de eliminacion de tarea
   openDeleteTask(task: Task) {
     this.taskToDelete.set(task);
@@ -88,5 +103,47 @@ export class KanbanBoardComponent {
       this.taskService.deleteTask(this.taskToDelete()?.id!);
     }
     this.closeDeleteTaskModal();
+  }
+
+  drop(event: CdkDragDrop<Task[]>, column: TaskColumn) {
+    console.log(column);
+    const { previousIndex, currentIndex, container, previousContainer, item } =
+      event;
+
+    const draggedTask = item.data as Task;
+    if (!draggedTask) return;
+
+    const sourceColumnData = previousContainer.data as Task[];
+    const sourceStatus = sourceColumnData[previousIndex].status;
+
+    if (previousContainer.id === container.id) {
+      //Esto significa que la tarea se ha movido dentro de la misma columna
+      //esto mueve de manera visual las tarjetas
+      moveItemInArray(container.data, previousIndex, currentIndex);
+
+      //Actualiza el orden de las tareas en la columna
+      this.taskService.reorderTasks(
+        column.id,
+        container.data.map((task) => task.id)
+      );
+    } else {
+      //Esto significa que la tarea se ha movido a otra columna
+      // esto transfiere la tarea de una columna a otra
+      transferArrayItem(
+        previousContainer.data,
+        container.data,
+        previousIndex,
+        currentIndex
+      );
+
+      //Actualiza donde va la tarea y modifica el estado de la tarea
+
+      this.taskService.reorderTaskOtherColumn(
+        draggedTask.id,
+        sourceStatus,
+        column.id,
+        currentIndex
+      );
+    }
   }
 }

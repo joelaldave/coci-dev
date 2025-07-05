@@ -27,7 +27,10 @@
     </button>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6"
+    cdkDropListGroup
+  >
     @for (column of columns(); track column.id) {
     <div
       class="bg-base-100 rounded-box shadow-sm border border-base-300 flex flex-col transition-all"
@@ -49,13 +52,18 @@
       <div
         class="p-3 lg:p-4 space-y-3 flex-1 overflow-y-auto"
         style="min-height: 300px; max-height: 70vh"
+        cdkDropList
+        [cdkDropListData]="column.tasks"
+        (cdkDropListDropped)="drop($event, column)"
       >
         @for (task of column.tasks; track task.id) {
-        <app-card-kanban-item
-          [task]="task"
-          (editTask)="editTask($event)"
-          (deleteTask)="openDeleteTask($event)"
-        ></app-card-kanban-item>
+        <div cdkDrag [cdkDragData]="task" class="cursor-pointer">
+          <app-card-kanban-item
+            [task]="task"
+            (editTask)="editTask($event)"
+            (deleteTask)="openDeleteTask($event)"
+          ></app-card-kanban-item>
+        </div>
         }
       </div>
     </div>

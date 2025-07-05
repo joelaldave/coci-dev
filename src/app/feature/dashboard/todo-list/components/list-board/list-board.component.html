@@ -1,0 +1,277 @@
+<div class="space-y-6">
+  <!-- Header con filtros y acciones -->
+  <div
+    class="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center"
+  >
+    <!-- Filtros -->
+
+    <!-- Botón nueva tarea -->
+    <button class="btn btn-primary btn-sm gap-2" (click)="onAddTask()">
+      <svg
+        class="w-4 h-4"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 4v16m8-8H4"
+        />
+      </svg>
+      Nueva Tarea
+    </button>
+  </div>
+
+  <!-- Lista de Tareas -->
+  <div class="space-y-3">
+    @for (task of task(); track task.id) {
+    <div
+      class="card bg-base-100 border border-base-300 hover:shadow-md transition-all duration-200"
+      [class.border-error]="isOverdue(task)"
+      [class.opacity-75]="task.status === TaskStatus.COMPLETED"
+    >
+      <div class="card-body p-4">
+        <div class="flex items-start gap-4">
+          <!-- Checkbox -->
+          <div class="cursor-pointer">
+            <input
+              type="checkbox"
+              class="checkbox checkbox-primary mt-1"
+              [checked]="task.status === TaskStatus.COMPLETED"
+              (change)="onToggleComplete(task, $any($event.target).checked)"
+            />
+          </div>
+
+          <!-- Contenido principal -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between gap-4">
+              <!-- Información de la tarea -->
+              <div class="flex-1 min-w-0">
+                <h3
+                  class="font-semibold text-base-content mb-1"
+                  [class.line-through]="task.status === TaskStatus.COMPLETED"
+                  [class.opacity-70]="task.status === TaskStatus.COMPLETED"
+                >
+                  {{ task.title }}
+                </h3>
+                <p class="text-sm text-base-content/70 mb-3 line-clamp-2">
+                  {{ task.description }}
+                </p>
+
+                <!-- Metadatos -->
+                <div class="flex flex-wrap items-center gap-4 text-sm">
+                  <!-- Fecha límite -->
+                  <div
+                    class="flex items-center gap-2"
+                    [class.text-error]="isOverdue(task)"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <span>{{ formatDate(task.dueDate) }}</span>
+                    @if (isOverdue(task)) {
+                    <span class="badge badge-error badge-xs">Vencida</span>
+                    }
+                  </div>
+
+                  <!-- Asignado -->
+                  <div class="flex items-center gap-2">
+                    <div
+                      class="w-5 h-5 rounded-full flex items-center justify-center text-white font-bold text-xs"
+                      [style.background-color]="task.assigneeColor"
+                    >
+                      {{ task.assigneeInitials }}
+                    </div>
+                    <span class="text-base-content/70">{{
+                      task.assignee
+                    }}</span>
+                  </div>
+
+                  <!-- Categoría -->
+                  <div class="flex items-center gap-2">
+                    <svg
+                      class="w-4 h-4 text-base-content/50"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                      />
+                    </svg>
+                    <span class="text-base-content/70">{{
+                      task.category
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Estado y acciones -->
+              <div class="flex items-start gap-3 flex-shrink-0">
+                <!-- Estado -->
+                <div
+                  class="badge badge-sm"
+                  [ngClass]="getStatusBadgeClass(task.status)"
+                >
+                  {{ getStatusText(task.status) }}
+                </div>
+
+                <!-- Prioridad -->
+                <div
+                  class="badge badge-sm badge-outline"
+                  [ngClass]="getPriorityBadgeClass(task.priority)"
+                >
+                  {{ getPriorityText(task.priority) }}
+                </div>
+
+                <!-- Menú de acciones -->
+                <details class="dropdown dropdown-end">
+                  <summary class="btn btn-ghost btn-xs btn-square">
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                      />
+                    </svg>
+                  </summary>
+                  <ul
+                    class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-36 z-10"
+                  >
+                    <li>
+                      <button
+                        type="button"
+                        class="text-sm justify-start"
+                        (click)="onEditTask(task)"
+                      >
+                        <svg
+                          class="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                          />
+                        </svg>
+                        Editar
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        class="text-sm text-error justify-start"
+                        (click)="onDeleteTask(task)"
+                      >
+                        <svg
+                          class="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                        Eliminar
+                      </button>
+                    </li>
+                  </ul>
+                </details>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    } @empty {
+    <!-- Estado vacío -->
+    <div class="card bg-base-100 border border-base-300">
+      <div class="card-body text-center py-12">
+        <div
+          class="w-16 h-16 mx-auto mb-4 rounded-full bg-base-200 flex items-center justify-center"
+        >
+          <svg
+            class="w-8 h-8 text-base-content/50"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012-2"
+            />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-base-content mb-2">
+          No hay tareas
+        </h3>
+        <p class="text-base-content/60 mb-4">
+          Crea tu primera tarea para comenzar a organizar tu trabajo
+        </p>
+        <button class="btn btn-primary btn-sm" (click)="onAddTask()">
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          Crear Tarea
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+</div>
+
+<!-- Modal para crear/editar tareas -->
+<app-task-modal
+  [isOpen]="isModalOpen()"
+  [editingTask]="editingTask()"
+  (onClose)="onModalClose()"
+  (onSave)="onTaskSaved($event)"
+/>
+
+<!-- Modal para eliminar tareas -->
+<app-delete-task-modal
+  [isOpen]="isDeleteModalOpen()"
+  [task]="taskToDelete()"
+  (onConfirm)="onDeleteConfirm()"
+  (onCancel)="onDeleteCancel()"
+/>
