@@ -1,0 +1,91 @@
+@if (isOpen()) {
+    <dialog #dialogRef class="modal modal-middle">
+        <div class="modal-box max-w-md">
+          <!-- Header del modal -->
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-base-content">Eliminar Tarea</h3>
+              <p class="text-sm text-base-content/60">Esta acción no se puede deshacer</p>
+            </div>
+          </div>
+      
+          <!-- Información de la tarea -->
+          @if (task()) {
+            <div class="card bg-base-200 mb-6">
+              <div class="card-body p-4">
+                <div class="flex items-start gap-3">
+                  <!-- Avatar -->
+                  <div
+                    class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-sm"
+                    [style.background-color]="task()!.assigneeColor"
+                  >
+                    {{ task()!.assigneeInitials }}
+                  </div>
+                  <!-- Contenido -->
+                  <div class="flex-1 min-w-0">
+                    <h4 class="font-semibold text-base-content mb-2">{{ task()!.title }}</h4>
+                    <p class="text-sm text-base-content/70 mb-3 line-clamp-2">{{ task()!.description }}</p>
+                    <div class="flex flex-wrap gap-2">
+                      <div class="badge badge-outline badge-sm">{{ task()!.category }}</div>
+                      <div class="badge badge-sm" [ngClass]="getPriorityBadgeClass(task()!.priority)">
+                        {{ getPriorityText(task()!.priority) }}
+                      </div>
+                      <div class="badge badge-ghost badge-sm">{{ task()!.assignee }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+      
+          <!-- Mensaje de advertencia -->
+          <div class="alert alert-warning mb-6">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <div>
+              <h4 class="font-semibold">¿Estás seguro?</h4>
+              <p class="text-sm">Una vez eliminada, esta tarea no se podrá recuperar.</p>
+            </div>
+          </div>
+      
+          <!-- Acciones -->
+          <div class="flex gap-3">
+            <button
+              type="button"
+              class="btn btn-ghost flex-1"
+              (click)="cancelDelete()"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-error flex-1"
+              (click)="confirmDelete()"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+              Eliminar
+            </button>
+          </div>
+        </div>
+      
+        <!-- Backdrop -->
+        <form method="dialog" class="modal-backdrop">
+          <button type="button" (click)="cancelDelete()">Cerrar</button>
+        </form>
+      </dialog>
+
+}

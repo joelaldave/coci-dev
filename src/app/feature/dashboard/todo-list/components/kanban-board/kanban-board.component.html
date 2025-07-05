@@ -45,14 +45,17 @@
             </div>
           </div>
         </div>
-        
       </div>
       <div
         class="p-3 lg:p-4 space-y-3 flex-1 overflow-y-auto"
         style="min-height: 300px; max-height: 70vh"
       >
         @for (task of column.tasks; track task.id) {
-        <app-card-kanban-item [task]="task"></app-card-kanban-item>
+        <app-card-kanban-item
+          [task]="task"
+          (editTask)="editTask($event)"
+          (deleteTask)="openDeleteTask($event)"
+        ></app-card-kanban-item>
         }
       </div>
     </div>
@@ -63,6 +66,13 @@
 <app-task-modal
   [isOpen]="isTaskModalOpen()"
   [editingTask]="editingTask()"
-  (save)="onTaskSave($event)"
-  (close)="closeTaskModal()"
+  (onSave)="onTaskSave($event)"
+  (onClose)="closeTaskModalEdition()"
 ></app-task-modal>
+
+<app-delete-task-modal
+  [isOpen]="isDeleteTaskModalOpen()"
+  [task]="taskToDelete()"
+  (onConfirm)="deleteTask()"
+  (onCancel)="closeDeleteTaskModal()"
+></app-delete-task-modal>

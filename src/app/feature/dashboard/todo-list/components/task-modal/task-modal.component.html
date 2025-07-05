@@ -1,151 +1,492 @@
 @if (isOpen()) {
 <dialog #dialogRef class="modal modal-middle">
-  <div class="modal-box w-full max-w-lg">
-    <h3 class="font-bold text-lg mb-4">
-      {{ editingTask() ? "Editar tarea" : "Nueva tarea" }}
-    </h3>
-    <form
-      [formGroup]="form"
-      (ngSubmit)="onSave()"
-      autocomplete="off"
-      class="space-y-4"
+  <div class="modal-box w-11/12 max-w-3xl max-h-[90vh] overflow-y-auto">
+    <!-- Header -->
+    <div
+      class="flex items-center justify-between pb-4 border-b border-base-300 mb-6"
     >
-      <!-- Título -->
       <div>
-        <label class="label" for="title">
-          <span class="label-text">Título</span>
-        </label>
-        <input
-          id="title"
-          type="text"
-          class="input input-bordered w-full"
-          formControlName="title"
-          maxlength="100"
-          required
-        />
+        <h3 class="text-2xl font-bold text-base-content">
+          @if (editingTask()) { Editar Tarea } @else { Nueva Tarea }
+        </h3>
+        <p class="text-sm text-base-content/60 mt-1">
+          @if (editingTask()) { Modifica los detalles de tu tarea } @else {
+          Completa la información para crear una nueva tarea }
+        </p>
       </div>
-      <!-- Descripción -->
-      <div>
-        <label class="label" for="description">
-          <span class="label-text">Descripción</span>
-        </label>
-        <textarea
-          id="description"
-          class="textarea textarea-bordered w-full"
-          rows="3"
-          formControlName="description"
-          maxlength="500"
-        ></textarea>
-      </div>
-      <!-- Prioridad y Estado -->
-      <div class="flex flex-col sm:flex-row gap-3">
-        <div class="flex-1">
-          <label class="label" for="priority">
-            <span class="label-text">Prioridad</span>
-          </label>
-          <select
-            id="priority"
-            class="select select-bordered w-full"
-            formControlName="priority"
-            required
-          >
-            <option [ngValue]="null" disabled>Selecciona prioridad</option>
-            @for (item of priorities; track $index) {
-            <option [value]="item.value">{{ item.label }}</option>
+      <button
+        class="btn btn-ghost btn-circle btn-sm"
+        type="button"
+        (click)="onCancel()"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Formulario -->
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Información básica -->
+      <div class="card bg-base-50 border border-base-200">
+        <div class="card-body p-6">
+          <h4 class="card-title text-lg mb-4 flex items-center gap-2">
+            <div
+              class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center"
+            >
+              <svg
+                class="w-4 h-4 text-primary"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            Información básica
+          </h4>
+          <div class="space-y-4">
+            <!-- Título -->
+            <div class="input input-bordered flex items-center gap-2">
+              <svg
+                class="w-4 h-4 text-base-content/60"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                />
+              </svg>
+              <input
+                type="text"
+                class="grow"
+                placeholder="Título de la tarea *"
+                formControlName="title"
+                [class.input-error]="titleError"
+              />
+            </div>
+            @if (titleError) {
+            <div class="text-error text-sm flex items-center gap-2">
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              {{ titleError }}
+            </div>
             }
-          </select>
+            <!-- Descripción -->
+            <div class="w-full">
+              <label class="form-control w-full">
+                <div class="label">
+                  <span class="label-text text-base font-semibold"
+                    >Descripción detallada</span
+                  >
+                  <span class="label-text-alt"
+                    >{{ taskForm.get("description")?.value?.length || 0 }}/500
+                    caracteres</span
+                  >
+                </div>
+                <textarea
+                  placeholder="Describe los objetivos, requisitos y criterios de aceptación de la tarea..."
+                  class="textarea textarea-bordered textarea-lg h-32 text-base leading-relaxed resize-none w-full"
+                  [class.textarea-error]="descriptionError"
+                  formControlName="description"
+                ></textarea>
+                @if (descriptionError) {
+                <div class="label">
+                  <span
+                    class="label-text-alt text-error flex items-center gap-1"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    {{ descriptionError }}
+                  </span>
+                </div>
+                }
+              </label>
+            </div>
+          </div>
         </div>
-        <div class="flex-1">
-          <label class="label" for="status">
-            <span class="label-text">Estado</span>
-          </label>
-          <select
-            id="status"
-            class="select select-bordered w-full"
-            formControlName="status"
-            required
-          >
-            <option [ngValue]="null" disabled>Selecciona estado</option>
-            @for (item of statuses; track $index) {
-            <option [value]="item.value">{{ item.label }}</option>
+      </div>
+
+      <!-- Configuración de tarea -->
+      <div class="card bg-base-50 border border-base-200">
+        <div class="card-body p-6">
+          <h4 class="card-title text-lg mb-4 flex items-center gap-2">
+            <div
+              class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center"
+            >
+              <svg
+                class="w-4 h-4 text-secondary"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+            </div>
+            Configuración
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Prioridad -->
+            <div class="form-control">
+              <div class="label">
+                <span class="label-text font-medium flex items-center gap-2">
+                  <svg
+                    class="w-4 h-4 text-warning"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                    />
+                  </svg>
+                  Prioridad *
+                </span>
+              </div>
+              <select class="select select-bordered" formControlName="priority">
+                <option [value]="TaskPriority.LOW">🟢 Baja</option>
+                <option [value]="TaskPriority.MEDIUM">🟡 Media</option>
+                <option [value]="TaskPriority.HIGH">🔴 Alta</option>
+              </select>
+            </div>
+            <!-- Estado -->
+            <div class="form-control">
+              <div class="label">
+                <span class="label-text font-medium flex items-center gap-2">
+                  <svg
+                    class="w-4 h-4 text-info"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                    />
+                  </svg>
+                  Estado *
+                </span>
+              </div>
+              <select class="select select-bordered" formControlName="status">
+                <option [value]="TaskStatus.TODO">📋 Por Hacer</option>
+                <option [value]="TaskStatus.IN_PROGRESS">⚡ En Progreso</option>
+                <option [value]="TaskStatus.IN_REVIEW">👀 En Revisión</option>
+                <option [value]="TaskStatus.COMPLETED">✅ Completada</option>
+              </select>
+            </div>
+            <!-- Categoría -->
+            <div class="form-control">
+              <div class="label">
+                <span class="label-text font-medium flex items-center gap-2">
+                  <svg
+                    class="w-4 h-4 text-accent"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                    />
+                  </svg>
+                  Categoría *
+                </span>
+              </div>
+              <input
+                type="text"
+                placeholder="ej: Desarrollo, Diseño, Testing"
+                class="input input-bordered"
+                formControlName="category"
+                [class.input-error]="categoryError"
+              />
+              @if (categoryError) {
+              <div class="label">
+                <span class="label-text-alt text-error">{{
+                  categoryError
+                }}</span>
+              </div>
+              }
+            </div>
+            <!-- Fecha límite -->
+            <div class="form-control">
+              <div class="label">
+                <span class="label-text font-medium flex items-center gap-2">
+                  <svg
+                    class="w-4 h-4 text-error"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  Fecha límite *
+                </span>
+              </div>
+              <input
+                type="date"
+                class="input input-bordered"
+                formControlName="dueDate"
+                [class.input-error]="dueDateError"
+              />
+              @if (dueDateError) {
+              <div class="label">
+                <span class="label-text-alt text-error">{{
+                  dueDateError
+                }}</span>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Asignación -->
+      <div class="card bg-base-50 border border-base-200">
+        <div class="card-body p-6">
+          <h4 class="card-title text-lg mb-4 flex items-center gap-2">
+            <div
+              class="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center"
+            >
+              <svg
+                class="w-4 h-4 text-success"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+            </div>
+            Asignación
+          </h4>
+          <div class="space-y-4">
+            <!-- Asignado a -->
+            <div class="input input-bordered flex items-center gap-2">
+              <svg
+                class="w-4 h-4 text-base-content/60"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+              <input
+                type="text"
+                class="grow"
+                placeholder="Nombre de la persona asignada *"
+                formControlName="assignee"
+                [class.input-error]="assigneeError"
+              />
+            </div>
+            @if (assigneeError) {
+            <div class="text-error text-sm flex items-center gap-2">
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              {{ assigneeError }}
+            </div>
             }
-          </select>
+            <!-- Selector de color para avatar -->
+            <div class="space-y-3">
+              <div class="label">
+                <span class="label-text font-medium">Color del avatar</span>
+              </div>
+              <div class="flex flex-wrap gap-3">
+                @for (color of avatarColors; track color.value) {
+                <button
+                  type="button"
+                  class="w-10 h-10 rounded-full border-4 transition-all hover:scale-110"
+                  [style.background-color]="color.value"
+                  [class.border-base-content]="selectedColor() === color.value"
+                  [class.border-base-300]="selectedColor() !== color.value"
+                  [class.ring-2]="selectedColor() === color.value"
+                  [class.ring-offset-2]="selectedColor() === color.value"
+                  [class.ring-base-content]="selectedColor() === color.value"
+                  (click)="onColorSelect(color.value)"
+                  [attr.aria-label]="'Color ' + color.name"
+                ></button>
+                }
+              </div>
+              <!-- Vista previa del avatar -->
+              <div
+                class="flex items-center gap-4 p-4 bg-base-100 rounded-box border border-base-200"
+              >
+                <div
+                  class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold shadow-lg"
+                  [style.background-color]="selectedColor()"
+                >
+                  {{
+                    taskForm.get("assignee")?.value
+                      ? generateInitials(taskForm.get("assignee")?.value)
+                      : "?"
+                  }}
+                </div>
+                <div>
+                  <p class="font-medium text-base-content">
+                    Vista previa del avatar
+                  </p>
+                  <p class="text-sm text-base-content/60">
+                    @if (taskForm.get('assignee')?.value) {
+                    {{ taskForm.get("assignee")?.value }}
+                    } @else { Escribe un nombre para ver las iniciales }
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <!-- Categoría -->
-      <div>
-        <label class="label" for="category">
-          <span class="label-text">Categoría</span>
-        </label>
-        <input
-          id="category"
-          type="text"
-          class="input input-bordered w-full"
-          formControlName="category"
-          maxlength="50"
-        />
-      </div>
-      <!-- Asignado a -->
-      <div class="flex flex-col sm:flex-row gap-3">
-        <div class="flex-1">
-          <label class="label" for="assignee">
-            <span class="label-text">Asignado a</span>
-          </label>
-          <input
-            id="assignee"
-            type="text"
-            class="input input-bordered w-full"
-            formControlName="assignee"
-            maxlength="50"
-          />
-        </div>
-        <div class="flex-1">
-          <label class="label" for="assigneeInitials">
-            <span class="label-text">Iniciales</span>
-          </label>
-          <input
-            id="assigneeInitials"
-            type="text"
-            class="input input-bordered w-full"
-            formControlName="assigneeInitials"
-            maxlength="4"
-          />
-        </div>
-        <div class="flex-1">
-          <label class="label" for="assigneeColor">
-            <span class="label-text">Color</span>
-          </label>
-          <input
-            id="assigneeColor"
-            type="color"
-            class="input input-bordered w-full h-10 p-1"
-            formControlName="assigneeColor"
-          />
-        </div>
-      </div>
-      <!-- Fecha límite -->
-      <div>
-        <label class="label" for="dueDate">
-          <span class="label-text">Fecha límite</span>
-        </label>
-        <input
-          id="dueDate"
-          type="date"
-          class="input input-bordered w-full"
-          formControlName="dueDate"
-          required
-        />
-      </div>
+
       <!-- Acciones -->
-      <div class="modal-action">
-        <button type="button" class="btn btn-ghost" (click)="onClose()">
+      <div
+        class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-base-300"
+      >
+        <button
+          type="button"
+          class="btn btn-ghost flex-1 sm:flex-none"
+          (click)="onCancel()"
+          [disabled]="isSubmitting()"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
           Cancelar
         </button>
-        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
-          {{ editingTask() ? "Guardar cambios" : "Crear tarea" }}
+        <button
+          type="submit"
+          class="btn btn-primary flex-1 sm:flex-none sm:min-w-40"
+          [disabled]="taskForm.invalid || isSubmitting()"
+        >
+          @if (isSubmitting()) {
+          <span class="loading loading-spinner loading-sm"></span>
+          Guardando... } @else { @if (editingTask()) {
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+            />
+          </svg>
+          Actualizar Tarea } @else {
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
+          </svg>
+          Crear Tarea } }
         </button>
       </div>
     </form>
   </div>
+  <form method="dialog" class="modal-backdrop bg-black/50">
+    <button type="button" (click)="onCancel()">Cerrar</button>
+  </form>
 </dialog>
 }

@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { Task, TaskStatus } from '../../interfaces/task.interface';
 import { CommonModule, DatePipe } from '@angular/common';
 
@@ -24,5 +29,4 @@ export class CardKanbanItemComponent {
   onDelete() {
     this.deleteTask.emit(this.task());
   }
-  
 }
