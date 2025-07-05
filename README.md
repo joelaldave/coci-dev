@@ -1,59 +1,48 @@
-# CociDev
+# Coci Dev - Gestor de Tareas Kanban
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.0.
+Coci Dev es una aplicación web desarrollada en Angular que permite gestionar tareas de manera eficiente utilizando un tablero Kanban moderno y responsivo. 
 
-## Development server
+## Características principales
 
-To start a local development server, run:
+- **Tablero Kanban**: Visualiza y organiza tareas en columnas personalizadas (Por hacer, En proceso, En revisión, Terminadas).
+- **Arrastrar y soltar**: Cambia tareas de columna y reordénalas fácilmente con drag & drop.
+- **Vista de lista**: Alterna entre vista Kanban y vista de lista para adaptarse a tus preferencias.
+- **Creación y edición de tareas**: Añade, edita y elimina tareas con formularios modales amigables.
+- **Asignación y seguimiento**: Asigna responsables, categorías, prioridades y fechas límite a cada tarea.
+- **Indicadores visuales**: Badges de estado, prioridad, vencimiento y progreso.
+- **Estadísticas**: Visualiza el total de tareas y el estado de cada columna.
+- **Persistencia local**: Las tareas se guardan en el almacenamiento local del navegador.
+- **Diseño moderno**: Interfaz responsiva y atractiva usando [daisyUI 5](https://daisyui.com/) y Tailwind CSS 4.
+- **Soporte para temas**: Cambia el tema visual fácilmente gracias a daisyUI.
 
-```bash
-ng serve
-```
+## Tecnologías utilizadas
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- [Angular](https://angular.dev/)
+- [daisyUI 5](https://daisyui.com/) (sobre Tailwind CSS 4)
+- [RxJS](https://rxjs.dev/) y Signals para reactividad
+- [Angular CDK Drag & Drop](https://material.angular.io/cdk/drag-drop/overview)
 
-## Code scaffolding
+## Instalación y uso
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/tu-usuario/coci-dev.git
+   cd coci-dev
+   ```
 
-```bash
-ng generate component component-name
-```
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+3. Inicia la aplicación:
+   ```bash
+   npm start
+   ```
+   Luego abre [http://localhost:4200](http://localhost:4200) en tu navegador.
 
-```bash
-ng generate --help
-```
 
-## Building
+## Créditos
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Desarrollado por @dev_coci.  
+UI potenciada por [daisyUI 5](https://daisyui.com/) y [Tailwind CSS 4](https://tailwindcss.com/).
