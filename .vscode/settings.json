@@ -6,5 +6,11 @@
       {
         "file": "./.vscode/angular.md",
       }
-    ]
+    ],
+    "angular-schematics.schematicsDefaultOptions": {
+      "angular-*": {
+        "externalTemplate": true,
+        "skipStyle": true
+      }
+    }
   }

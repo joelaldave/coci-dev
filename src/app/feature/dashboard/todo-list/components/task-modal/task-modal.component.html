@@ -1,0 +1,151 @@
+@if (isOpen()) {
+<dialog #dialogRef class="modal modal-middle">
+  <div class="modal-box w-full max-w-lg">
+    <h3 class="font-bold text-lg mb-4">
+      {{ editingTask() ? "Editar tarea" : "Nueva tarea" }}
+    </h3>
+    <form
+      [formGroup]="form"
+      (ngSubmit)="onSave()"
+      autocomplete="off"
+      class="space-y-4"
+    >
+      <!-- Título -->
+      <div>
+        <label class="label" for="title">
+          <span class="label-text">Título</span>
+        </label>
+        <input
+          id="title"
+          type="text"
+          class="input input-bordered w-full"
+          formControlName="title"
+          maxlength="100"
+          required
+        />
+      </div>
+      <!-- Descripción -->
+      <div>
+        <label class="label" for="description">
+          <span class="label-text">Descripción</span>
+        </label>
+        <textarea
+          id="description"
+          class="textarea textarea-bordered w-full"
+          rows="3"
+          formControlName="description"
+          maxlength="500"
+        ></textarea>
+      </div>
+      <!-- Prioridad y Estado -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <div class="flex-1">
+          <label class="label" for="priority">
+            <span class="label-text">Prioridad</span>
+          </label>
+          <select
+            id="priority"
+            class="select select-bordered w-full"
+            formControlName="priority"
+            required
+          >
+            <option [ngValue]="null" disabled>Selecciona prioridad</option>
+            @for (item of priorities; track $index) {
+            <option [value]="item.value">{{ item.label }}</option>
+            }
+          </select>
+        </div>
+        <div class="flex-1">
+          <label class="label" for="status">
+            <span class="label-text">Estado</span>
+          </label>
+          <select
+            id="status"
+            class="select select-bordered w-full"
+            formControlName="status"
+            required
+          >
+            <option [ngValue]="null" disabled>Selecciona estado</option>
+            @for (item of statuses; track $index) {
+            <option [value]="item.value">{{ item.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <!-- Categoría -->
+      <div>
+        <label class="label" for="category">
+          <span class="label-text">Categoría</span>
+        </label>
+        <input
+          id="category"
+          type="text"
+          class="input input-bordered w-full"
+          formControlName="category"
+          maxlength="50"
+        />
+      </div>
+      <!-- Asignado a -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <div class="flex-1">
+          <label class="label" for="assignee">
+            <span class="label-text">Asignado a</span>
+          </label>
+          <input
+            id="assignee"
+            type="text"
+            class="input input-bordered w-full"
+            formControlName="assignee"
+            maxlength="50"
+          />
+        </div>
+        <div class="flex-1">
+          <label class="label" for="assigneeInitials">
+            <span class="label-text">Iniciales</span>
+          </label>
+          <input
+            id="assigneeInitials"
+            type="text"
+            class="input input-bordered w-full"
+            formControlName="assigneeInitials"
+            maxlength="4"
+          />
+        </div>
+        <div class="flex-1">
+          <label class="label" for="assigneeColor">
+            <span class="label-text">Color</span>
+          </label>
+          <input
+            id="assigneeColor"
+            type="color"
+            class="input input-bordered w-full h-10 p-1"
+            formControlName="assigneeColor"
+          />
+        </div>
+      </div>
+      <!-- Fecha límite -->
+      <div>
+        <label class="label" for="dueDate">
+          <span class="label-text">Fecha límite</span>
+        </label>
+        <input
+          id="dueDate"
+          type="date"
+          class="input input-bordered w-full"
+          formControlName="dueDate"
+          required
+        />
+      </div>
+      <!-- Acciones -->
+      <div class="modal-action">
+        <button type="button" class="btn btn-ghost" (click)="onClose()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+          {{ editingTask() ? "Guardar cambios" : "Crear tarea" }}
+        </button>
+      </div>
+    </form>
+  </div>
+</dialog>
+}

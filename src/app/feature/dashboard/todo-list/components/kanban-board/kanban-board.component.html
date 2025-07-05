@@ -1,0 +1,68 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div
+    class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+  >
+    <div>
+      <h2 class="text-2xl font-bold">Tablero Kanban</h2>
+      <p class="text-base-content/70 text-sm">
+        Arrastra las tareas entre columnas
+      </p>
+    </div>
+    <button class="btn btn-primary gap-2" (click)="openTaskModal()">
+      <svg
+        class="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+        />
+      </svg>
+      Nueva Tarea
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
+    @for (column of columns(); track column.id) {
+    <div
+      class="bg-base-100 rounded-box shadow-sm border border-base-300 flex flex-col transition-all"
+      [ngClass]="column.hoverColor"
+    >
+      <div class="p-4 border-b border-base-300 flex-shrink-0">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <div class="w-3 h-3 rounded-full" [ngClass]="column.color"></div>
+            <h3 class="font-semibold text-sm lg:text-base truncate">
+              {{ column.title }}
+            </h3>
+            <div class="badge badge-neutral badge-sm flex-shrink-0">
+              {{ column.tasks.length }}
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      <div
+        class="p-3 lg:p-4 space-y-3 flex-1 overflow-y-auto"
+        style="min-height: 300px; max-height: 70vh"
+      >
+        @for (task of column.tasks; track task.id) {
+        <app-card-kanban-item [task]="task"></app-card-kanban-item>
+        }
+      </div>
+    </div>
+    }
+  </div>
+</div>
+
+<app-task-modal
+  [isOpen]="isTaskModalOpen()"
+  [editingTask]="editingTask()"
+  (save)="onTaskSave($event)"
+  (close)="closeTaskModal()"
+></app-task-modal>

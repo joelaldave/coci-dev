@@ -1,0 +1,80 @@
+<div class="max-w-4xl mx-auto mt-8 space-y-10">
+  <!-- Estadísticas generales -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="card bg-gradient-to-br from-primary/10 to-base-100 shadow-lg">
+      <div class="card-body items-center text-center p-6">
+        <div class="stat">
+          <div class="stat-title text-base-content/70">Total de tareas</div>
+          <div class="stat-value text-primary">{{ stats().total }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="card bg-gradient-to-br from-warning/10 to-base-100 shadow-lg">
+      <div class="card-body items-center text-center p-6">
+        <div class="stat">
+          <div class="stat-title text-base-content/70">Por hacer</div>
+          <div class="stat-value text-warning">{{ stats().todo }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="card bg-gradient-to-br from-info/10 to-base-100 shadow-lg">
+      <div class="card-body items-center text-center p-6">
+        <div class="stat">
+          <div class="stat-title text-base-content/70">En proceso</div>
+          <div class="stat-value text-info">{{ stats().inProgress }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="card bg-gradient-to-br from-success/10 to-base-100 shadow-lg">
+      <div class="card-body items-center text-center p-6">
+        <div class="stat">
+          <div class="stat-title text-base-content/70">Terminadas</div>
+          <div class="stat-value text-success">{{ stats().completed }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selector de vista de tareas con mejor UI/UX -->
+  <div
+    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 px-6 py-4 rounded-xl bg-base-200 shadow"
+  >
+    <div>
+      <h1
+        class="text-2xl sm:text-3xl font-extrabold tracking-tight flex items-center gap-2"
+      >
+        Lista de tareas
+      </h1>
+      <p class="text-base-content/60 text-sm mt-1">
+        Visualiza y organiza tus tareas fácilmente
+      </p>
+    </div>
+    <div class="flex gap-2">
+      <div class="flex flex-col sm:flex-row gap-2">
+        <!-- Selector de Vista -->
+        <div class="join">
+          <input
+            type="radio"
+            name="view_options"
+            class="join-item btn btn-sm"
+            aria-label="Kanban"
+            [checked]="currentView() === 'kanban'"
+            (change)="switchView('kanban')"
+          />
+          <input
+            type="radio"
+            name="view_options"
+            class="join-item btn btn-sm"
+            aria-label="Lista"
+            [checked]="currentView() === 'list'"
+            (change)="switchView('list')"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (currentView()==='kanban') {
+  <app-kanban-board></app-kanban-board>
+  }
+</div>
