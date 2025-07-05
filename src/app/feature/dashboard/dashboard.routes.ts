@@ -7,7 +7,7 @@ export const dashboardRoutes: Routes = [
         component: PrincipalLayoutComponent,
         children: [
             {
-                path: '',
+                path: 'todo-list',
                 loadComponent: () => import('./todo-list/pages/general-page/general-page.component').then(m => m.GeneralPageComponent)
             },
         ]

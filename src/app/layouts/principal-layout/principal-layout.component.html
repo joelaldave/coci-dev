@@ -1,41 +1,60 @@
 <div class="drawer min-h-screen">
-    <input id="main-drawer" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content flex flex-col bg-base-100">
-      <!-- Navbar -->
-      <div class="navbar bg-base-200">
-        <div class="navbar-start">
-          <!-- Drawer toggle for mobile -->
-          <label for="main-drawer" class="btn btn-ghost btn-square lg:hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </label>
-          <a class="btn btn-ghost text-xl">MiApp</a>
-        </div>
-        <div class="navbar-center hidden lg:flex">
-          <ul class="menu menu-horizontal px-1">
-            <li><a routerLink="/dashboard">Dashboard</a></li>
-            <li><a routerLink="/perfil">Perfil</a></li>
-            <li><a routerLink="/ajustes">Ajustes</a></li>
-          </ul>
-        </div>
-        <div class="navbar-end">
-          <button class="btn btn-primary btn-sm">Salir</button>
-        </div>
+  <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content flex flex-col bg-base-100">
+    <!-- Navbar -->
+    <div class="navbar bg-base-200 shadow-sm">
+      <div class="navbar-start gap-2">
+        <!-- Drawer toggle for mobile -->
+        <label for="main-drawer" class="btn btn-ghost btn-square lg:hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </label>
+        <a class="btn btn-ghost text-xl font-bold tracking-tight flex items-center gap-2">
+          <span class="avatar w-9 h-9">
+            <img class="rounded-full" src="/assets/images/logo.png" alt="Logo" />
+          </span>
+          Coci Dev
+        </a>
       </div>
-      <!-- Main content -->
-      <main class="flex-1 p-4">
-        <router-outlet></router-outlet>
-      </main>
+      <div class="navbar-center hidden lg:flex">
+        <ul class="menu menu-horizontal px-1 gap-2">
+          <li>
+            <a routerLink="/todo-list" routerLinkActive="menu-active" [routerLinkActiveOptions]="{ exact: true }">
+              <svg class="w-5 h-5 mr-1 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012-2"/>
+              </svg>
+              Gestor de Tareas
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="navbar-end gap-2">
+        <!-- Puedes agregar aquí botones de usuario, tema, etc. -->
+      </div>
     </div>
-    <!-- Drawer sidebar for mobile -->
-    <div class="drawer-side">
-      <label for="main-drawer" class="drawer-overlay"></label>
-      <ul class="menu p-4 w-64 min-h-full bg-base-100">
-        <li><a routerLink="/dashboard">Dashboard</a></li>
-        <li><a routerLink="/perfil">Perfil</a></li>
-        <li><a routerLink="/ajustes">Ajustes</a></li>
-        <li class="mt-4"><button class="btn btn-primary btn-sm w-full">Salir</button></li>
-      </ul>
-    </div>
+    <!-- Main content -->
+    <main class="flex-1 p-4 bg-base-100">
+      <router-outlet></router-outlet>
+    </main>
   </div>
+  <!-- Drawer sidebar for mobile -->
+  <div class="drawer-side z-40">
+    <label for="main-drawer" class="drawer-overlay"></label>
+    <aside class="w-64 min-h-full bg-base-100 border-r border-base-200 flex flex-col">
+      <div class="flex items-center gap-2 px-4 py-3 border-b border-base-200">
+        <span class="font-bold text-lg tracking-tight">MiApp</span>
+      </div>
+      <ul class="menu p-4 flex-1">
+        <li>
+          <a routerLink="/todo-list" routerLinkActive="menu-active" [routerLinkActiveOptions]="{ exact: true }">
+            <svg class="w-5 h-5 mr-1 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012-2"/>
+            </svg>
+            Gestor de Tareas
+          </a>
+        </li>
+      </ul>
+    </aside>
+  </div>
+</div>
