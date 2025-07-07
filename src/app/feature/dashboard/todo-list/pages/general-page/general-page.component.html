@@ -1,7 +1,9 @@
 <div class="max-w-6xl mx-auto mt-10 space-y-12">
   <!-- Estadísticas generales -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-    <div class="card shadow-lg bg-gradient-to-br from-primary/10 to-base-100 border border-primary/20">
+    <div
+      class="card shadow-lg bg-gradient-to-br from-primary/10 to-base-100 border border-primary/20"
+    >
       <div class="card-body items-center text-center p-6">
         <div class="stat">
           <div class="stat-title text-base-content/70">Total de tareas</div>
@@ -9,7 +11,9 @@
         </div>
       </div>
     </div>
-    <div class="card shadow-lg bg-gradient-to-br from-warning/10 to-base-100 border border-warning/20">
+    <div
+      class="card shadow-lg bg-gradient-to-br from-warning/10 to-base-100 border border-warning/20"
+    >
       <div class="card-body items-center text-center p-6">
         <div class="stat">
           <div class="stat-title text-base-content/70">Por hacer</div>
@@ -17,7 +21,9 @@
         </div>
       </div>
     </div>
-    <div class="card shadow-lg bg-gradient-to-br from-info/10 to-base-100 border border-info/20">
+    <div
+      class="card shadow-lg bg-gradient-to-br from-info/10 to-base-100 border border-info/20"
+    >
       <div class="card-body items-center text-center p-6">
         <div class="stat">
           <div class="stat-title text-base-content/70">En proceso</div>
@@ -25,7 +31,9 @@
         </div>
       </div>
     </div>
-    <div class="card shadow-lg bg-gradient-to-br from-accent/10 to-base-100 border border-accent/20">
+    <div
+      class="card shadow-lg bg-gradient-to-br from-accent/10 to-base-100 border border-accent/20"
+    >
       <div class="card-body items-center text-center p-6">
         <div class="stat">
           <div class="stat-title text-base-content/70">En revisión</div>
@@ -33,7 +41,9 @@
         </div>
       </div>
     </div>
-    <div class="card shadow-lg bg-gradient-to-br from-success/10 to-base-100 border border-success/20">
+    <div
+      class="card shadow-lg bg-gradient-to-br from-success/10 to-base-100 border border-success/20"
+    >
       <div class="card-body items-center text-center p-6">
         <div class="stat">
           <div class="stat-title text-base-content/70">Terminadas</div>
@@ -44,12 +54,25 @@
   </div>
 
   <!-- Selector de vista de tareas con mejor UI/UX -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-10 px-8 py-6 rounded-2xl bg-base-200 shadow-lg border border-base-300">
+  <div
+    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-10 px-8 py-6 rounded-2xl bg-base-200 shadow-lg border border-base-300"
+  >
     <div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight flex items-center gap-3">
-        <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012-2"/>
+      <h1
+        class="text-3xl sm:text-4xl font-extrabold tracking-tight flex items-center gap-3"
+      >
+        <svg
+          class="w-8 h-8 text-primary"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012-2"
+          />
         </svg>
         Lista de tareas
       </h1>
@@ -78,21 +101,44 @@
         />
       </div>
       <span class="ml-2 text-xs text-base-content/50">
-        <svg *ngIf="currentView() === 'kanban'" class="inline w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        @if (currentView() === 'kanban') {
+        <svg
+          class="inline w-4 h-4 text-primary"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
         </svg>
-        <svg *ngIf="currentView() === 'list'" class="inline w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16"/>
+        } @else {
+
+        <svg
+          class="inline w-4 h-4 text-primary"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16"
+          />
         </svg>
-        {{ currentView() === 'kanban' ? 'Kanban' : 'Lista' }}
+        }
+        {{ currentView() === "kanban" ? "Kanban" : "Lista" }}
       </span>
     </div>
   </div>
 
   @if (currentView() === 'kanban') {
-    <app-kanban-board></app-kanban-board>
-  }
-  @else {
-    <app-list-board></app-list-board>
+  <app-kanban-board></app-kanban-board>
+  } @else {
+  <app-list-board></app-list-board>
   }
 </div>
