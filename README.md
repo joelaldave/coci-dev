@@ -15,12 +15,39 @@ Coci Dev es una aplicación web desarrollada en Angular que permite gestionar ta
 - **Diseño moderno**: Interfaz responsiva y atractiva usando [daisyUI 5](https://daisyui.com/) y Tailwind CSS 4.
 - **Soporte para temas**: Cambia el tema visual fácilmente gracias a daisyUI.
 
-## Tecnologías utilizadas
+## 🏗️ Arquitectura del Proyecto
 
-- [Angular](https://angular.dev/)
-- [daisyUI 5](https://daisyui.com/) (sobre Tailwind CSS 4)
-- [RxJS](https://rxjs.dev/) y Signals para reactividad
-- [Angular CDK Drag & Drop](https://material.angular.io/cdk/drag-drop/overview)
+```
+src/app/
+├── core/                          # Servicios core y configuración
+├── feature/dashboard/todo-list/   # Módulo principal de tareas
+│   ├── components/               # Componentes UI
+│   │   ├── kanban-board/        # Tablero Kanban
+│   │   ├── list-board/          # Vista de lista
+│   │   ├── task-modal/          # Modal de tareas
+│   │   ├── card-kanban-item/    # Tarjeta de tarea
+│   │   └── delete-task-modal/   # Modal de eliminación
+│   ├── interfaces/              # Tipos TypeScript
+│   │   ├── task.interface.ts    # Interfaces de tareas
+│   │   └── task-storage.interface.ts
+│   ├── services/               # Servicios de negocio
+│   │   ├── task.service.ts     # Lógica principal
+│   │   ├── task-local-storage.service.ts
+│   │   └── time-tracking.service.ts
+│   └── pages/                  # Páginas principales
+│       └── general-page/       # Página principal
+├── layouts/                    # Layouts de aplicación
+├── shared/                     # Componentes compartidos
+└── utils/                      # Utilidades
+```
+
+## 🎉 Créditos
+
+- **Desarrollado por**: [@dev_coci](https://github.com/dev_coci)
+- **UI Framework**: [daisyUI 5](https://daisyui.com/)
+- **CSS Framework**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Frontend Framework**: [Angular](https://angular.dev/)
+
 
 ## Instalación y uso
 
